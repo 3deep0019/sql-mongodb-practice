@@ -1,0 +1,31 @@
+-- 30 ADVANCED SQL PRACTICE QUESTIONS
+-- 1. Rank customers by total spending.
+-- 2. Find top 3 customers per city by spending.
+-- 3. Find top 3 products per category by revenue.
+-- 4. Calculate running monthly revenue.
+-- 5. Calculate month-over-month revenue growth.
+-- 6. Find each user's first order.
+-- 7. Find each user's second order.
+-- 8. Calculate days between first and second order.
+-- 9. Find customers with increasing order values over time.
+-- 10. Find customers whose latest order is larger than their first order.
+-- 11. Find the percentage of orders that were cancelled.
+-- 12. Find each product's revenue contribution percentage.
+-- 13. Find the Pareto-style top 20% products by revenue.
+-- 14. Find users who purchased every product in a category.
+-- 15. Find products purchased by users from at least 5 different cities.
+-- 16. Find the most popular product for every month.
+-- 17. Find the longest gap between orders for every customer.
+-- 18. Find customers with orders in 3 consecutive months.
+-- 19. Find products whose rating is above their category average.
+-- 20. Find suppliers whose product average price is above the global average.
+-- 21. Find inventory items that need restocking.
+-- 22. Find the percentage of inventory value held by each warehouse.
+-- 23. Find the best-selling product in each warehouse.
+-- 24. Find users who bought a product and later reviewed it.
+-- 25. Find users who reviewed products they never purchased.
+-- 26. Find orders where item totals do not approximately match order total.
+-- 27. Find duplicate emails or suspicious duplicate customer records.
+-- 28. Use a recursive CTE to display category hierarchy.
+-- 29. Use window functions to find the first/last product bought in each order.
+-- 30. Build a customer cohort table by signup month and first-order month.
