@@ -1,7 +1,33 @@
 -- 30 ADVANCED SQL PRACTICE QUESTIONS
 -- 1. Rank customers by total spending.
+SELECT
+      user_id,
+      SUM(total_amount),
+      DENSE_RANK() OVER (ORDER BY SUM(total_amount) DESC) AS rnk
+FROM orders
+GROUP BY user_id
+
 -- 2. Find top 3 customers per city by spending.
+SELECT user_id, shipping_city, total_spending
+FROM (
+    SELECT
+        user_id,
+        shipping_city,
+        SUM(total_amount) AS total_spending,
+        DENSE_RANK() OVER (
+            PARTITION BY shipping_city
+            ORDER BY SUM(total_amount) DESC
+        ) AS rnk
+    FROM orders
+    GROUP BY user_id, shipping_city
+) ranked_users
+WHERE rnk <= 3;
+
+
 -- 3. Find top 3 products per category by revenue.
+
+
+
 -- 4. Calculate running monthly revenue.
 -- 5. Calculate month-over-month revenue growth.
 -- 6. Find each user's first order.
