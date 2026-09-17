@@ -26,7 +26,38 @@ WHERE rnk <= 3;
 
 -- 3. Find top 3 products per category by revenue.
 
-
+SELECT
+      product_id,
+      product_name,
+      category,
+      category_id,
+      revenue
+FROM (
+      SELECT
+            p.id AS product_id,
+            p.name AS product_name,
+            c.name AS category,
+            p.category_id AS category_id,
+            SUM(oi.quantity * oi.unit_price) AS revenue,
+            DENSE_RANK() OVER(
+                  PARTITION BY p.category_id
+                  ORDER BY SUM(oi.quantity * oi.unit_price) DESC
+            ) AS rnk
+      FROM order_items 
+            AS oi
+      JOIN products 
+            AS p
+            ON oi.product_id = p.id
+      JOIN categories 
+            AS c
+            ON c.id = p.category_id
+      GROUP BY
+            p.id,
+            p.name,
+            c.name,
+            p.category_id
+) t
+WHERE rnk <=3
 
 -- 4. Calculate running monthly revenue.
 -- 5. Calculate month-over-month revenue growth.
