@@ -94,10 +94,17 @@ FROM (
 ) AS monthly_revenue
 ORDER BY month;
 
-
-
 -- 6. Find each user's first order.
+SELECT 
+      user_id,
+      u.name AS name,
+      min(order_date) AS first_order
+FROM orders
+JOIN users u ON u.id = user_id
+GROUP BY user_id, name
+
 -- 7. Find each user's second order.
+
 -- 8. Calculate days between first and second order.
 -- 9. Find customers with increasing order values over time.
 -- 10. Find customers whose latest order is larger than their first order.
