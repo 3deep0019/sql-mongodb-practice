@@ -104,6 +104,22 @@ JOIN users u ON u.id = user_id
 GROUP BY user_id, name
 
 -- 7. Find each user's second order.
+SELECT
+      user_id,
+      u.name,
+      order_date
+FROM (
+      SELECT
+            user_id,
+            order_date,
+        DENSE_RANK() OVER (
+            PARTITION BY user_id
+            ORDER BY order_date
+        ) AS rnk
+    FROM orders
+) t
+JOIN users u ON u.id = user_id
+WHERE rnk = 1;
 
 -- 8. Calculate days between first and second order.
 -- 9. Find customers with increasing order values over time.
