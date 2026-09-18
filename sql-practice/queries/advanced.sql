@@ -60,6 +60,22 @@ FROM (
 WHERE rnk <=3
 
 -- 4. Calculate running monthly revenue.
+SELECT
+    month,
+    revenue,
+    SUM(revenue) OVER (
+        ORDER BY month
+    ) AS running_revenue
+FROM (
+    SELECT
+        DATE_FORMAT(order_date, '%Y-%m') AS month,
+        SUM(total_amount) AS revenue
+    FROM orders
+    GROUP BY DATE_FORMAT(order_date, '%Y-%m')
+) AS monthly_revenue
+ORDER BY month;
+
+
 -- 5. Calculate month-over-month revenue growth.
 -- 6. Find each user's first order.
 -- 7. Find each user's second order.
