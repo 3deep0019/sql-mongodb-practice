@@ -77,6 +77,25 @@ ORDER BY month;
 
 
 -- 5. Calculate month-over-month revenue growth.
+SELECT
+    month,
+    revenue,
+    prv_rev,
+    ROUND(((revenue - prv_rev) / prv_rev) * 100, 2) AS per
+FROM (
+    SELECT
+        DATE_FORMAT(order_date, '%Y-%m') AS month,
+        SUM(total_amount) AS revenue,
+        LAG(SUM(total_amount)) OVER (
+            ORDER BY DATE_FORMAT(order_date, '%Y-%m')
+        ) AS prv_rev
+    FROM orders
+    GROUP BY DATE_FORMAT(order_date, '%Y-%m')
+) AS monthly_revenue
+ORDER BY month;
+
+
+
 -- 6. Find each user's first order.
 -- 7. Find each user's second order.
 -- 8. Calculate days between first and second order.
