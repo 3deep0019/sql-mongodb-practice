@@ -122,6 +122,26 @@ JOIN users u ON u.id = user_id
 WHERE rnk = 1;
 
 -- 8. Calculate days between first and second order.
+SELECT 
+    user_id,
+    u.name,
+    MAX(CASE WHEN row_num = 1 THEN order_date END) AS first_order,
+    MAX(CASE WHEN row_num = 2 THEN order_date END) AS second_order,
+    DATEDIFF(MAX(CASE WHEN row_num = 2 THEN order_date END), MAX(CASE WHEN row_num = 1 THEN order_date END)) AS diff
+FROM (
+    SELECT
+        user_id,
+        order_date,
+        ROW_NUMBER() OVER (
+            PARTITION BY user_id
+            ORDER BY order_date
+        ) AS row_num
+    FROM orders
+) t
+JOIN users u ON user_id = u.id
+GROUP BY user_id
+HAVING diff IS NOT NULL
+
 -- 9. Find customers with increasing order values over time.
 -- 10. Find customers whose latest order is larger than their first order.
 -- 11. Find the percentage of orders that were cancelled.
