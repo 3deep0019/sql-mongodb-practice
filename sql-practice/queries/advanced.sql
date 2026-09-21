@@ -137,12 +137,14 @@ FROM (
             ORDER BY order_date
         ) AS row_num
     FROM orders
+    WHERE status = 'delivered'
 ) t
 JOIN users u ON user_id = u.id
 GROUP BY user_id
 HAVING diff IS NOT NULL
 
 -- 9. Find customers with increasing order values over time.
+
 -- 10. Find customers whose latest order is larger than their first order.
 -- 11. Find the percentage of orders that were cancelled.
 -- 12. Find each product's revenue contribution percentage.
