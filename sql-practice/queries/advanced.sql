@@ -169,9 +169,31 @@ HAVING SUM(
     END
 ) = 0
 
-
-
 -- 10. Find customers whose latest order is larger than their first order.
+SELECT 
+    user_id,
+    u.name,
+    MAX(CASE WHEN row_num = 1 THEN total_amount END) AS first_order,
+    MAX(CASE WHEN row_num = total_orders THEN total_amount END) AS latest_order,
+    (MAX(CASE WHEN row_num = total_orders THEN total_amount END) - MAX(CASE WHEN row_num = 1 THEN total_amount END)) AS diff
+FROM (
+    SELECT
+        user_id,
+        total_amount,
+        order_date,
+        ROW_NUMBER() OVER (
+            PARTITION BY user_id
+            ORDER BY order_date
+        ) AS row_num,
+        COUNT(*) OVER (
+            PARTITION BY user_id
+        ) AS total_orders
+    FROM orders
+)t
+JOIN users u ON u.id = user_id
+GROUP BY user_id
+HAVING diff > 0;
+
 -- 11. Find the percentage of orders that were cancelled.
 -- 12. Find each product's revenue contribution percentage.
 -- 13. Find the Pareto-style top 20% products by revenue.
