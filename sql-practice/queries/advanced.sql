@@ -144,6 +144,32 @@ GROUP BY user_id
 HAVING diff IS NOT NULL
 
 -- 9. Find customers with increasing order values over time.
+SELECT
+    user_id,
+    u.name
+FROM (
+    SELECT 
+        user_id,
+        total_amount,
+        order_date,
+        LAG(total_amount) OVER (
+            PARTITION BY user_id
+            ORDER BY order_date
+        ) AS previous_amount
+    FROM orders
+) t
+JOIN users u ON u.id = user_id
+GROUP BY user_id
+HAVING SUM(
+    CASE
+        WHEN previous_amount IS NOT NULL
+             AND total_amount <= previous_amount
+        THEN 1
+        ELSE 0
+    END
+) = 0
+
+
 
 -- 10. Find customers whose latest order is larger than their first order.
 -- 11. Find the percentage of orders that were cancelled.
