@@ -195,6 +195,17 @@ GROUP BY user_id
 HAVING diff > 0;
 
 -- 11. Find the percentage of orders that were cancelled.
+SELECT 
+    COUNT(CASE 
+        WHEN status = 'cancelled' THEN 1 END) AS cancelled_orders,
+    COUNT(*) AS total_orders,
+    ROUND(
+        COUNT(CASE 
+        WHEN status = 'cancelled' THEN 1 END) * 100 / COUNT(*)
+        ,2) AS cancelled_order_percentage
+FROM
+orders
+
 -- 12. Find each product's revenue contribution percentage.
 -- 13. Find the Pareto-style top 20% products by revenue.
 -- 14. Find users who purchased every product in a category.
