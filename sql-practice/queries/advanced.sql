@@ -174,8 +174,7 @@ SELECT
     user_id,
     u.name,
     MAX(CASE WHEN row_num = 1 THEN total_amount END) AS first_order,
-    MAX(CASE WHEN row_num = total_orders THEN total_amount END) AS latest_order,
-    (MAX(CASE WHEN row_num = total_orders THEN total_amount END) - MAX(CASE WHEN row_num = 1 THEN total_amount END)) AS diff
+    MAX(CASE WHEN row_num = total_orders THEN total_amount END) AS latest_order
 FROM (
     SELECT
         user_id,
@@ -192,7 +191,7 @@ FROM (
 )t
 JOIN users u ON u.id = user_id
 GROUP BY user_id
-HAVING diff > 0;
+HAVING first_order < latest_order
 
 -- 11. Find the percentage of orders that were cancelled.
 SELECT 
@@ -207,6 +206,19 @@ FROM
 orders
 
 -- 12. Find each product's revenue contribution percentage.
+SELECT
+    product_id,
+    product_revenue,
+    ROUND(product_revenue * 100 / total_revenue, 2) AS revenue_contribution_percentage
+FROM (
+    SELECT
+        product_id,
+        SUM(quantity*unit_price) AS product_revenue,
+        SUM(SUM(quantity*unit_price)) OVER() AS total_revenue
+    FROM order_items
+    GROUP BY product_id
+)t
+
 -- 13. Find the Pareto-style top 20% products by revenue.
 -- 14. Find users who purchased every product in a category.
 -- 15. Find products purchased by users from at least 5 different cities.
