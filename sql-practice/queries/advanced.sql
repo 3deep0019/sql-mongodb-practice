@@ -220,7 +220,23 @@ FROM (
 )t
 
 -- 13. Find the Pareto-style top 20% products by revenue.
+WITH ProductRevenue AS (
+    SELECT
+        product_id,
+        SUM(quantity * unit_price) AS product_revenue,
+        PERCENT_RANK() OVER (ORDER BY SUM(quantity * unit_price) DESC) AS revenue_rank_percent
+    FROM order_items
+    GROUP BY product_id
+)
+SELECT 
+    product_id,
+    product_revenue,
+    revenue_rank_percent
+FROM ProductRevenue
+WHERE revenue_rank_percent <= 0.20;
+
 -- 14. Find users who purchased every product in a category.
+
 -- 15. Find products purchased by users from at least 5 different cities.
 -- 16. Find the most popular product for every month.
 -- 17. Find the longest gap between orders for every customer.
