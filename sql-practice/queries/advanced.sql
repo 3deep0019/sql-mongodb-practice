@@ -235,7 +235,55 @@ SELECT
 FROM ProductRevenue
 WHERE revenue_rank_percent <= 0.20;
 
+WITH product_revenue AS (
+    SELECT
+        product_id,
+        SUM(
+            quantity * unit_price * (1 - discount / 100.0)
+        ) AS revenue
+    FROM order_items
+    GROUP BY product_id
+),
+ranked_products AS (
+    SELECT
+        product_id,
+        revenue,
+        ROW_NUMBER() OVER (
+            ORDER BY revenue DESC, product_id
+        ) AS rn,
+        COUNT(*) OVER () AS total_products
+    FROM product_revenue
+)
+SELECT
+    product_id,
+    ROUND(revenue, 2) AS revenue
+FROM ranked_products
+WHERE rn <= CEIL(total_products * 0.20)
+ORDER BY revenue DESC;
+
 -- 14. Find users who purchased every product in a category.
+SELECT
+    u.id AS user_id,
+    u.name,
+    p.category_id
+FROM users u
+CROSS JOIN (
+    SELECT DISTINCT category_id
+    FROM products
+) c
+JOIN orders o
+    ON o.user_id = u.id
+JOIN order_items oi
+    ON oi.order_id = o.id
+JOIN products p
+    ON p.id = oi.product_id
+   AND p.category_id = c.category_id
+GROUP BY u.id, u.name, c.category_id
+HAVING COUNT(DISTINCT p.id) = (
+    SELECT COUNT(*)
+    FROM products p2
+    WHERE p2.category_id = c.category_id
+);
 
 -- 15. Find products purchased by users from at least 5 different cities.
 -- 16. Find the most popular product for every month.
