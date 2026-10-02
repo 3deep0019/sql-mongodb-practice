@@ -263,9 +263,8 @@ ORDER BY revenue DESC;
 
 -- 14. Find users who purchased every product in a category.
 SELECT
-    u.id AS user_id,
-    u.name,
-    p.category_id
+    DISTINCT(u.id) AS user_id,
+    u.name
 FROM users u
 CROSS JOIN (
     SELECT DISTINCT category_id
@@ -284,6 +283,7 @@ HAVING COUNT(DISTINCT p.id) = (
     FROM products p2
     WHERE p2.category_id = c.category_id
 );
+
 
 -- 15. Find products purchased by users from at least 5 different cities.
 -- 16. Find the most popular product for every month.
