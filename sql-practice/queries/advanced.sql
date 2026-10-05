@@ -283,9 +283,17 @@ HAVING COUNT(DISTINCT p.id) = (
     FROM products p2
     WHERE p2.category_id = c.category_id
 );
-
-
 -- 15. Find products purchased by users from at least 5 different cities.
+SELECT
+    p.id,
+    p.name
+FROM products p
+JOIN order_items oi
+    ON oi.product_id = p.id
+JOIN orders o
+    ON o.id = oi.order_id
+GROUP BY p.id, p.name
+HAVING COUNT(DISTINCT o.shipping_city) >= 5;
 -- 16. Find the most popular product for every month.
 -- 17. Find the longest gap between orders for every customer.
 -- 18. Find customers with orders in 3 consecutive months.
