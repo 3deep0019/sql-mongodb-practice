@@ -294,7 +294,39 @@ JOIN orders o
     ON o.id = oi.order_id
 GROUP BY p.id, p.name
 HAVING COUNT(DISTINCT o.shipping_city) >= 5;
+
 -- 16. Find the most popular product for every month.
+WITH monthly_sales AS (
+    SELECT
+        DATE_FORMAT(o.order_date, '%Y-%m') AS month,
+        oi.product_id,
+        SUM(oi.quantity) AS total_quantity
+    FROM orders o
+    JOIN order_items oi
+        ON oi.order_id = o.id
+    GROUP BY
+        DATE_FORMAT(o.order_date, '%Y-%m'),
+        oi.product_id
+),
+ranked_products AS (
+    SELECT
+        month,
+        product_id,
+        total_quantity,
+        ROW_NUMBER() OVER (
+            PARTITION BY month
+            ORDER BY total_quantity DESC
+        ) AS rn
+    FROM monthly_sales
+)
+SELECT
+    month,
+    product_id,
+    total_quantity
+FROM ranked_products
+WHERE rn = 1
+ORDER BY month;
+
 -- 17. Find the longest gap between orders for every customer.
 -- 18. Find customers with orders in 3 consecutive months.
 -- 19. Find products whose rating is above their category average.
