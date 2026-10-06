@@ -345,6 +345,80 @@ GROUP BY user_id
 HAVING diff IS NOT NULL;
 
 -- 18. Find customers with orders in 3 consecutive months.
+WITH customer_months AS (
+    SELECT DISTINCT
+        user_id,
+        DATE_FORMAT(order_date, "%Y-%m-01") AS order_month
+    FROM orders
+),
+month_seq AS (
+    SELECT 
+        user_id,
+        order_month,
+        LAG(order_month, 1) OVER(
+            PARTITION BY user_id
+            ORDER BY order_month
+        ) AS prev_month,
+        LAG(order_month, 2) OVER(
+            PARTITION BY user_id
+            ORDER BY order_month
+        ) AS prev_prev_month
+    FROM customer_months
+)
+SELECT DISTINCT
+    user_id
+FROM month_seq
+WHERE TIMESTAMPDIFF(
+        MONTH,
+        prev_month,
+        order_month
+    ) = 1
+    AND
+    TIMESTAMPDIFF(
+        MONTH,
+        prev_prev_month,
+        order_month
+    ) = 2;
+
+
+-- WITH customer_months AS (
+--     SELECT DISTINCT
+--         user_id,
+--         DATE_FORMAT(order_date, "%Y-%m-01") AS order_month
+--     FROM orders
+-- ),
+-- month_seq AS (
+--     SELECT 
+--         user_id,
+--         order_month,
+--         LAG(order_month, 1) OVER(
+--             PARTITION BY user_id
+--             ORDER BY order_month
+--         ) AS prev_month,
+--         LAG(order_month, 2) OVER(
+--             PARTITION BY user_id
+--             ORDER BY order_month
+--         ) AS prev_prev_month
+--     FROM customer_months
+-- )
+-- SELECT
+--     user_id,
+--     order_month,
+--     prev_month,
+--     prev_prev_month,
+--     TIMESTAMPDIFF(
+--         MONTH,
+--         prev_month,
+--         order_month
+--     ),
+--     TIMESTAMPDIFF(
+--         MONTH,
+--         prev_prev_month,
+--         order_month
+--     )
+-- FROM month_seq
+-- WHERE user_id = 3002;
+
 -- 19. Find products whose rating is above their category average.
 -- 20. Find suppliers whose product average price is above the global average.
 -- 21. Find inventory items that need restocking.
