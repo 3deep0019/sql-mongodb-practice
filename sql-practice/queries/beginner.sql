@@ -220,5 +220,15 @@ FROM suppliers
 WHERE rating > 4.5;
 
 -- 29. Find inventory below reorder_level.
+SELECT
+    product_id,
+    warehouse
+FROM inventory
+WHERE quantity < reorder_level
 
 -- 30. Find active coupons.
+SELECT
+    id AS coupon_id,
+    code AS coupon_code
+FROM coupons
+WHERE status = 'active'
