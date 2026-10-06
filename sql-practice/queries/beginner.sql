@@ -213,6 +213,12 @@ FROM orders
 GROUP BY user_id;
 
 -- 28. Find suppliers with rating > 4.5.
+SELECT
+    id AS supplier_id,
+    name AS supplier_name
+FROM suppliers
+WHERE rating > 4.5;
 
 -- 29. Find inventory below reorder_level.
+
 -- 30. Find active coupons.
