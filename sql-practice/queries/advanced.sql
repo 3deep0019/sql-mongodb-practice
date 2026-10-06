@@ -428,7 +428,7 @@ WITH category_avgs AS (
     GROUP BY category_id
 )
 SELECT
-    p.id
+    p.id AS product_id
 FROM category_avgs ca
 JOIN products AS p 
 ON p.category_id = ca.category_id
