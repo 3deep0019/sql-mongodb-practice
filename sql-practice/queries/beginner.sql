@@ -165,12 +165,46 @@ SELECT
 FROM reviews;
 
 -- 21. Find reviews with rating 5.
+SELECT
+    id AS review_id
+FROM reviews
+WHERE rating = 5;
 
 -- 22. Sort products by price descending.
+SELECT
+    id AS product_id,
+    price
+FROM products
+ORDER BY price DESC;
+
 -- 23. Return the top 10 most expensive products.
+SELECT
+    id AS product_id
+FROM products
+ORDER BY price DESC
+LIMIT 10;
+
 -- 24. Return the 10 cheapest products.
+SELECT
+    id AS product_id
+FROM products
+ORDER BY price
+LIMIT 10;
+
 -- 25. Count users by city.
+SELECT
+    city,
+    COUNT(id) AS user_count
+FROM users
+GROUP BY city;
+
 -- 26. Count products by category_id.
+SELECT
+    category_id,
+    COUNT(id) AS product_count
+FROM products
+GROUP BY category_id;
+
 -- 27. Count orders by user_id.
 -- 28. Find suppliers with rating > 4.5.
 -- 29. Find inventory below reorder_level.
