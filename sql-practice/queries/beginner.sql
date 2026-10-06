@@ -224,7 +224,7 @@ SELECT
     product_id,
     warehouse
 FROM inventory
-WHERE quantity < reorder_level
+WHERE quantity < reorder_level;
 
 -- 30. Find active coupons.
 SELECT
