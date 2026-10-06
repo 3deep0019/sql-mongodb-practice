@@ -432,7 +432,8 @@ SELECT
 FROM category_avgs ca
 JOIN products AS p 
 ON p.category_id = ca.category_id
-WHERE p.rating > category_avg;
+WHERE p.rating > category_avg
+ORDER BY p.id
 
 -- 20. Find suppliers whose product average price is above the global average.
 -- 21. Find inventory items that need restocking.
