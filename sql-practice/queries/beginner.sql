@@ -206,6 +206,13 @@ FROM products
 GROUP BY category_id;
 
 -- 27. Count orders by user_id.
+SELECT
+    user_id,
+    COUNT(id) AS orders
+FROM orders
+GROUP BY user_id;
+
 -- 28. Find suppliers with rating > 4.5.
+
 -- 29. Find inventory below reorder_level.
 -- 30. Find active coupons.
