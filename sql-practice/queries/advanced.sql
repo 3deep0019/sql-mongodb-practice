@@ -328,6 +328,22 @@ WHERE rn = 1
 ORDER BY month;
 
 -- 17. Find the longest gap between orders for every customer.
+SELECT 
+    user_id,
+    MAX(DATEDIFF(order_date, prev_order)) AS diff
+FROM (
+    SELECT
+        user_id,
+        order_date,
+        LAG(order_date) OVER (
+            PARTITION BY user_id
+            ORDER BY order_date
+        ) AS prev_order
+    FROM orders
+)t
+GROUP BY user_id
+HAVING diff IS NOT NULL;
+
 -- 18. Find customers with orders in 3 consecutive months.
 -- 19. Find products whose rating is above their category average.
 -- 20. Find suppliers whose product average price is above the global average.
