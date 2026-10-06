@@ -420,6 +420,20 @@ WHERE TIMESTAMPDIFF(
 -- WHERE user_id = 3002;
 
 -- 19. Find products whose rating is above their category average.
+WITH category_avgs AS (
+    SELECT
+        category_id,
+        AVG(rating) AS category_avg
+    FROM products
+    GROUP BY category_id
+)
+SELECT
+    p.id
+FROM category_avgs ca
+JOIN products AS p 
+ON p.category_id = ca.category_id
+WHERE p.rating > category_avg;
+
 -- 20. Find suppliers whose product average price is above the global average.
 -- 21. Find inventory items that need restocking.
 -- 22. Find the percentage of inventory value held by each warehouse.
