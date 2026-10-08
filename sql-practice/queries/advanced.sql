@@ -454,6 +454,14 @@ WHERE sup_avg > (
 )
 
 -- 21. Find inventory items that need restocking.
+SELECT
+    product_id,
+    warehouse,
+    quantity,
+    reorder_level
+FROM inventory
+WHERE quantity < reorder_level;
+
 -- 22. Find the percentage of inventory value held by each warehouse.
 -- 23. Find the best-selling product in each warehouse.
 -- 24. Find users who bought a product and later reviewed it.
