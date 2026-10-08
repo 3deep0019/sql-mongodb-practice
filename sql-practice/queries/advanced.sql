@@ -436,6 +436,23 @@ WHERE p.rating > category_avg
 ORDER BY p.id
 
 -- 20. Find suppliers whose product average price is above the global average.
+WITH supplier_avg AS (
+    SELECT
+        supplier_id,
+        AVG(price) AS sup_avg
+    FROM
+        products
+    GROUP BY supplier_id
+)
+SELECT
+    supplier_id,
+    sup_avg
+FROM supplier_avg
+WHERE sup_avg > (
+    SELECT AVG(price)
+    FROM products
+)
+
 -- 21. Find inventory items that need restocking.
 -- 22. Find the percentage of inventory value held by each warehouse.
 -- 23. Find the best-selling product in each warehouse.
