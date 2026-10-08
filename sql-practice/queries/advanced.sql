@@ -463,6 +463,14 @@ FROM inventory
 WHERE quantity < reorder_level;
 
 -- 22. Find the percentage of inventory value held by each warehouse.
+SELECT
+    warehouse,
+    SUM(quantity * price) AS inventory_value,
+    ROUND(SUM(quantity * price) * 100 / SUM(SUM(quantity * price)) OVER (), 2) AS percentage_of_total
+FROM inventory i
+JOIN products p ON i.product_id = p.id
+GROUP BY warehouse;
+
 -- 23. Find the best-selling product in each warehouse.
 -- 24. Find users who bought a product and later reviewed it.
 -- 25. Find users who reviewed products they never purchased.
