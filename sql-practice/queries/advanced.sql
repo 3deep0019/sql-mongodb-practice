@@ -472,6 +472,38 @@ JOIN products p ON i.product_id = p.id
 GROUP BY warehouse;
 
 -- 23. Find the best-selling product in each warehouse.
+WITH warehouse_sales AS (
+    SELECT
+        i.warehouse,
+        oi.product_id,
+        SUM(oi.quantity) AS total_quantity_sold
+    FROM order_items oi
+    JOIN inventory i
+        ON i.product_id = oi.product_id
+    GROUP BY
+        i.warehouse,
+        oi.product_id
+),
+ranked_products AS (
+    SELECT
+        warehouse,
+        product_id,
+        total_quantity_sold,
+        ROW_NUMBER() OVER (
+            PARTITION BY warehouse
+            ORDER BY total_quantity_sold DESC
+        ) AS rn
+    FROM warehouse_sales
+)
+SELECT
+    warehouse,
+    product_id,
+    total_quantity_sold
+FROM ranked_products
+WHERE rn = 1
+ORDER BY warehouse;
+
+
 -- 24. Find users who bought a product and later reviewed it.
 -- 25. Find users who reviewed products they never purchased.
 -- 26. Find orders where item totals do not approximately match order total.
