@@ -531,8 +531,20 @@ WHERE NOT EXISTS (
     WHERE o.user_id = r.user_id
       AND oi.product_id = r.product_id
 );
--- 26. Find orders where item totals do not approximately match order total.
 
+-- 26. Find orders where item totals do not approximately match order total.
+SELECT
+    o.id AS order_id,
+    o.total_amount,
+    SUM(oi.quantity * oi.unit_price) AS item_total,
+    ABS(o.total_amount - SUM(oi.quantity * oi.unit_price)) AS difference
+FROM orders o
+JOIN order_items oi
+    ON oi.order_id = o.id
+GROUP BY o.id, o.total_amount
+HAVING ABS(
+    o.total_amount - SUM(oi.quantity * oi.unit_price)
+) > 1;
 
 -- 27. Find duplicate emails or suspicious duplicate customer records.
 -- 28. Use a recursive CTE to display category hierarchy.
