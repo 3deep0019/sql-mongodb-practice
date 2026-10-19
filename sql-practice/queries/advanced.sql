@@ -505,8 +505,35 @@ ORDER BY warehouse;
 
 
 -- 24. Find users who bought a product and later reviewed it.
+SELECT o.id AS order_id,
+    o.user_id,
+    oi.product_id,
+    r.id AS review_id
+FROM orders o
+JOIN order_items oi N
+    ON oi.order_id = o.id
+JOIN reviews r 
+    ON r.product_id = oi.product_id 
+        AND r.user_id = o.user_id 
+        AND r.created_at > o.order_date
+
 -- 25. Find users who reviewed products they never purchased.
+SELECT
+    r.user_id,
+    r.product_id,
+    r.id AS review_id
+FROM reviews r
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM orders o
+    JOIN order_items oi
+        ON oi.order_id = o.id
+    WHERE o.user_id = r.user_id
+      AND oi.product_id = r.product_id
+);
 -- 26. Find orders where item totals do not approximately match order total.
+
+
 -- 27. Find duplicate emails or suspicious duplicate customer records.
 -- 28. Use a recursive CTE to display category hierarchy.
 -- 29. Use window functions to find the first/last product bought in each order.
